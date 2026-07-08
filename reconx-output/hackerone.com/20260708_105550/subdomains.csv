@@ -1,0 +1,12 @@
+subdomain,source,ip_addresses,confidence,discovered_at
+hackerone.com,hackertarget,104.18.36.214,1,2026-07-08T10:55:21.426081600+00:00
+api.hackerone.com,hackertarget,172.64.151.42,1,2026-07-08T10:55:21.426086+00:00
+docs.hackerone.com,hackertarget,172.64.151.42,1,2026-07-08T10:55:21.426087200+00:00
+mta-sts.forwarding.hackerone.com,hackertarget,185.199.108.153,1,2026-07-08T10:55:21.426088700+00:00
+gslink.hackerone.com,hackertarget,18.173.132.30,1,2026-07-08T10:55:21.426090200+00:00
+mta-sts.managed.hackerone.com,hackertarget,185.199.111.153,1,2026-07-08T10:55:21.426093800+00:00
+mta-sts.hackerone.com,hackertarget,185.199.111.153,1,2026-07-08T10:55:21.426095100+00:00
+a.ns.hackerone.com,hackertarget,162.159.0.31,1,2026-07-08T10:55:21.426096500+00:00
+b.ns.hackerone.com,hackertarget,162.159.1.31,1,2026-07-08T10:55:21.426098300+00:00
+support.hackerone.com,hackertarget,162.159.140.147,1,2026-07-08T10:55:21.426101900+00:00
+www.hackerone.com,hackertarget,172.64.151.42,1,2026-07-08T10:55:21.426103200+00:00

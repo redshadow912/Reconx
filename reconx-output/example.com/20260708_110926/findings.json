@@ -1,0 +1,28 @@
+[
+  {
+    "type": "Subdomain",
+    "subdomain": "www.example.com",
+    "source": "hackertarget",
+    "ip_addresses": [
+      "172.66.147.243"
+    ],
+    "cname": null,
+    "dns_records": [],
+    "first_seen": null,
+    "is_wildcard": false,
+    "confidence": 1,
+    "discovered_at": "2026-07-08T11:08:56.829019900Z"
+  },
+  {
+    "type": "Subdomain",
+    "subdomain": "example.com",
+    "source": "commoncrawl",
+    "ip_addresses": [],
+    "cname": null,
+    "dns_records": [],
+    "first_seen": null,
+    "is_wildcard": false,
+    "confidence": 1,
+    "discovered_at": "2026-07-08T11:08:56.979068300Z"
+  }
+]

@@ -1,0 +1,3 @@
+subdomain,source,ip_addresses,confidence,discovered_at
+www.example.com,hackertarget,172.66.147.243,1,2026-07-08T11:08:56.829019900+00:00
+example.com,commoncrawl,,1,2026-07-08T11:08:56.979068300+00:00

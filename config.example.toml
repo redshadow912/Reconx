@@ -1,0 +1,35 @@
+# Reconx Configuration
+# Place this file at ~/.config/reconx/config.toml (Linux/Mac)
+# or %APPDATA%/reconx/config.toml (Windows)
+
+concurrency = 10
+timeout_secs = 30
+
+[api_keys]
+# Certificate Transparency
+# censys = "id:secret"
+
+# DNS/Subdomain
+# virustotal = "your-api-key"
+# securitytrails = "your-api-key"
+
+# Threat Intel
+# alienvault = "your-api-key"
+# urlscan = "your-api-key"
+# fullhunt = "your-api-key"
+# intelx = "your-api-key"
+
+# Credential Breaches
+# hibp = "your-api-key"
+
+# Code/Doc Leaks
+# github = "your-github-token"
+
+# Host/Service
+# shodan = "your-api-key"
+
+# Wireless
+# wigle = "your-api-key"
+
+# WHOIS/ASN
+# ipinfo = "your-api-key"
