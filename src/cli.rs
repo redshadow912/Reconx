@@ -35,6 +35,15 @@ pub enum Commands {
         #[arg(long, value_delimiter = ',', help = "Exclude specific sources")]
         exclude: Option<Vec<String>>,
 
+        #[arg(long, help = "Resolve subdomains to IP addresses")]
+        resolve: bool,
+
+        #[arg(long, help = "Filter out wildcard subdomains")]
+        no_wildcard: bool,
+
+        #[arg(long, help = "Path to previous scan JSON for diff comparison")]
+        diff: Option<String>,
+
         #[arg(long, help = "Disable colored output")]
         no_color: bool,
 
@@ -143,6 +152,15 @@ pub enum Commands {
         #[arg(long, value_delimiter = ',', help = "Exclude specific sources")]
         exclude: Option<Vec<String>>,
 
+        #[arg(long, help = "Resolve subdomains to IP addresses")]
+        resolve: bool,
+
+        #[arg(long, help = "Filter out wildcard subdomains")]
+        no_wildcard: bool,
+
+        #[arg(long, help = "Path to previous scan JSON for diff comparison")]
+        diff: Option<String>,
+
         #[arg(long, help = "Disable colored output")]
         no_color: bool,
 
@@ -150,6 +168,36 @@ pub enum Commands {
         quiet: bool,
 
         #[arg(short, long, help = "Show detailed collector logs")]
+        verbose: bool,
+    },
+
+    #[command(about = "HTTP probe discovered subdomains for live web services")]
+    Probe {
+        #[arg(short, long, help = "Target domain")]
+        domain: Option<String>,
+
+        #[arg(short, long, help = "Input JSON file from previous scan")]
+        input: Option<String>,
+
+        #[arg(short, long, help = "Output directory")]
+        output: Option<String>,
+
+        #[arg(short, long, value_delimiter = ',', help = "Report formats: html,json,csv")]
+        format: Option<Vec<ReportFormat>>,
+
+        #[arg(short = 'c', long, default_value = "20", help = "Max parallel probes")]
+        concurrency: usize,
+
+        #[arg(short, long, default_value = "10", help = "Timeout per probe in seconds")]
+        timeout: u64,
+
+        #[arg(long, help = "Disable colored output")]
+        no_color: bool,
+
+        #[arg(short, long, help = "Suppress progress output")]
+        quiet: bool,
+
+        #[arg(short, long, help = "Show detailed probe logs")]
         verbose: bool,
     },
 
@@ -201,4 +249,5 @@ pub enum ReportFormat {
     Html,
     Json,
     Csv,
+    Markdown,
 }

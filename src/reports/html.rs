@@ -1,13 +1,10 @@
 use std::path::Path;
 
-use crate::analyzers::risk_scorer::{RiskScore, RiskScorer};
+use crate::analyzers::risk_scorer::RiskScore;
 use crate::error::Result;
 use crate::models::Finding;
 
-pub fn generate(findings: &[Finding], domain: &str, output_path: &Path) -> Result<()> {
-    let risk = RiskScorer::score(domain, findings);
-
-    let subdomains: Vec<&crate::models::SubdomainFinding> = findings
+pub fn generate(findings: &[Finding], domain: &str, risk: &RiskScore, output_path: &Path) -> Result<()> {    let subdomains: Vec<&crate::models::SubdomainFinding> = findings
         .iter()
         .filter_map(|f| {
             if let Finding::Subdomain(s) = f {

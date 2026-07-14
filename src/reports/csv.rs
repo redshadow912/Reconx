@@ -88,5 +88,88 @@ pub fn generate(findings: &[Finding], output_path: &Path) -> Result<()> {
     }
     wtr.flush()?;
 
+    let emails_path = output_path.join("emails.csv");
+    let mut wtr = csv::Writer::from_path(&emails_path)?;
+    wtr.write_record(&["email", "name", "position", "confidence", "source", "discovered_at"])?;
+
+    for finding in findings {
+        if let Finding::Email(e) = finding {
+            wtr.write_record(&[
+                &e.email,
+                &e.name.clone().unwrap_or_default(),
+                &e.position.clone().unwrap_or_default(),
+                &e.confidence.map(|c| c.to_string()).unwrap_or_default(),
+                &e.source,
+                &e.discovered_at.to_rfc3339(),
+            ])?;
+        }
+    }
+    wtr.flush()?;
+
+    let probes_path = output_path.join("probes.csv");
+    let mut wtr = csv::Writer::from_path(&probes_path)?;
+    wtr.write_record(&["url", "status_code", "title", "server", "technologies", "cdn", "waf", "discovered_at"])?;
+
+    for finding in findings {
+        if let Finding::HttpProbe(p) = finding {
+            wtr.write_record(&[
+                &p.url,
+                &p.status_code.to_string(),
+                &p.title.clone().unwrap_or_default(),
+                &p.server.clone().unwrap_or_default(),
+                &p.technologies.join(", "),
+                &p.cdn.clone().unwrap_or_default(),
+                &p.waf.clone().unwrap_or_default(),
+                &p.discovered_at.to_rfc3339(),
+            ])?;
+        }
+    }
+    wtr.flush()?;
+
+    // WHOIS CSV
+    let whois_path = output_path.join("whois.csv");
+    let mut wtr = csv::Writer::from_path(&whois_path)?;
+    wtr.write_record(&["domain", "registrar", "created", "expires", "days_until_expiry", "domain_age_days", "registrant_org", "nameservers", "privacy_protected", "discovered_at"])?;
+
+    for finding in findings {
+        if let Finding::Whois(w) = finding {
+            wtr.write_record(&[
+                &w.domain,
+                &w.registrar.clone().unwrap_or_default(),
+                &w.creation_date.clone().unwrap_or_default(),
+                &w.expiration_date.clone().unwrap_or_default(),
+                &w.days_until_expiry.map(|d| d.to_string()).unwrap_or_default(),
+                &w.domain_age_days.map(|d| d.to_string()).unwrap_or_default(),
+                &w.registrant_org.clone().unwrap_or_default(),
+                &w.nameservers.join(", "),
+                &if w.is_privacy_protected { "Yes" } else { "No" }.to_string(),
+                &w.discovered_at.to_rfc3339(),
+            ])?;
+        }
+    }
+    wtr.flush()?;
+
+    // SSL CSV
+    let ssl_path = output_path.join("ssl.csv");
+    let mut wtr = csv::Writer::from_path(&ssl_path)?;
+    wtr.write_record(&["host", "subject", "issuer", "not_after", "days_until_expiry", "is_expired", "is_self_signed", "sans", "discovered_at"])?;
+
+    for finding in findings {
+        if let Finding::Ssl(s) = finding {
+            wtr.write_record(&[
+                &s.host,
+                &s.subject.clone().unwrap_or_default(),
+                &s.issuer.clone().unwrap_or_default(),
+                &s.not_after.clone().unwrap_or_default(),
+                &s.days_until_expiry.map(|d| d.to_string()).unwrap_or_default(),
+                &s.is_expired.to_string(),
+                &s.is_self_signed.to_string(),
+                &s.sans.join(", "),
+                &s.discovered_at.to_rfc3339(),
+            ])?;
+        }
+    }
+    wtr.flush()?;
+
     Ok(())
 }

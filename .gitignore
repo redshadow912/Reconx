@@ -1,1 +1,26 @@
+# Build artifacts
 /target
+debug/
+*.pdb
+
+# Output & scan results
+/reconx-output/
+
+# Configuration with API keys
+config.toml
+*.toml.bak
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

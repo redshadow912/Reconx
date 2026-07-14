@@ -17,14 +17,10 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 toml = "0.8"
 thiserror = "2"
-anyhow = "1"
-tera = "1"
 csv = "1"
 indicatif = { version = "0.17", features = ["tokio"] }
 colored = "2"
 chrono = { version = "0.4", features = ["serde"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 governor = "0.8"
 hickory-resolver = "0.24"
 url = "2"
@@ -34,6 +30,8 @@ async-trait = "0.1"
 futures = "0.3"
 dirs = "5"
 urlencoding = "2"
+rand = "0.8"
+base64 = "0.22"
 
 [profile.release]
 opt-level = 3

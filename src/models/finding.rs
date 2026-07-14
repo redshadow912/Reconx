@@ -52,6 +52,10 @@ pub enum Finding {
     Credential(super::CredentialFinding),
     Wireless(super::WirelessFinding),
     Vulnerability(super::VulnFinding),
+    Email(super::EmailFinding),
+    HttpProbe(super::HttpProbeFinding),
+    Whois(super::WhoisFinding),
+    Ssl(super::SslFinding),
 }
 
 impl Finding {
@@ -62,6 +66,10 @@ impl Finding {
             Finding::Credential(f) => &f.source,
             Finding::Wireless(f) => &f.source,
             Finding::Vulnerability(f) => &f.source,
+            Finding::Email(f) => &f.source,
+            Finding::HttpProbe(_) => "http_probe",
+            Finding::Whois(f) => &f.source,
+            Finding::Ssl(f) => &f.source,
         }
     }
 
@@ -72,6 +80,10 @@ impl Finding {
             Finding::Credential(f) => f.severity,
             Finding::Wireless(_) => Severity::Low,
             Finding::Vulnerability(f) => f.severity,
+            Finding::Email(_) => Severity::Medium,
+            Finding::HttpProbe(_) => Severity::Info,
+            Finding::Whois(_) => Severity::Info,
+            Finding::Ssl(f) => f.severity,
         }
     }
 
@@ -82,6 +94,10 @@ impl Finding {
             Finding::Credential(f) => f.discovered_at,
             Finding::Wireless(f) => f.discovered_at,
             Finding::Vulnerability(f) => f.discovered_at,
+            Finding::Email(f) => f.discovered_at,
+            Finding::HttpProbe(f) => f.discovered_at,
+            Finding::Whois(f) => f.discovered_at,
+            Finding::Ssl(f) => f.discovered_at,
         }
     }
 }

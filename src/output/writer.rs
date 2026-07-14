@@ -1,5 +1,8 @@
 use std::path::{Path, PathBuf};
 
+use crate::analyzers::risk_scorer::RiskScore;
+use crate::analyzers::takeover_detector::TakeoverResult;
+use crate::analyzers::diff_engine::DiffResult;
 use crate::cli::ReportFormat;
 use crate::error::Result;
 use crate::models::Finding;
@@ -20,7 +23,14 @@ impl OutputWriter {
         Ok(())
     }
 
-    pub fn write_all(&self, findings: &[Finding], domain: &str) -> Result<()> {
+    pub fn write_all(
+        &self,
+        findings: &[Finding],
+        domain: &str,
+        risk: &RiskScore,
+        takeovers: &[TakeoverResult],
+        diff: Option<&DiffResult>,
+    ) -> Result<()> {
         self.ensure_dir()?;
 
         for format in &self.formats {
@@ -32,7 +42,10 @@ impl OutputWriter {
                     reports::csv::generate(findings, &self.output_dir)?;
                 }
                 ReportFormat::Html => {
-                    reports::html::generate(findings, domain, &self.output_dir)?;
+                    reports::html::generate(findings, domain, risk, &self.output_dir)?;
+                }
+                ReportFormat::Markdown => {
+                    reports::markdown::generate(findings, domain, risk, takeovers, diff, &self.output_dir)?;
                 }
             }
         }

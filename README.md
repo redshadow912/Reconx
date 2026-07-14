@@ -9,15 +9,15 @@
  |_| \_\___|\___\___/|_| |_/_/\_\
 </pre>
 
-**Fast, passive-only OSINT reconnaissance tool for subdomain enumeration, asset discovery, and domain intelligence gathering.**
+**Fast, passive-only OSINT reconnaissance tool for subdomain enumeration, asset discovery, credential leak detection, and full domain intelligence.**
 
 [![Rust](https://img.shields.io/badge/Built_with-Rust-orange?logo=rust&style=flat-square)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 [![Passive](https://img.shields.io/badge/Mode-Passive_Only-green?style=flat-square)](#)
-[![Sources](https://img.shields.io/badge/Data_Sources-24+-purple?style=flat-square)](#)
+[![Sources](https://img.shields.io/badge/Data_Sources-36-purple?style=flat-square)](#-data-sources)
 [![Platform](https://img.shields.io/badge/Platform-Linux_%7C_macOS_%7C_Windows-lightgrey?style=flat-square)](#)
 
-[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Commands](#-commands) • [API Keys](#-api-keys) • [Reports](#-reports) • [Architecture](#-architecture)
+[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Commands](#-commands) • [Data Sources](#-data-sources) • [API Keys](#-api-keys) • [Reports](#-reports) • [Architecture](#-architecture)
 
 </div>
 
@@ -25,482 +25,443 @@
 
 ## Why Reconx?
 
-Reconx replaces the need to juggle SpiderFoot, Amass, theHarvester, and Recon-NG separately. One command queries **24+ passive data sources** concurrently, correlates results, scores risk, and generates professional reports — all without sending a single packet to the target.
+Reconx replaces the need to juggle SpiderFoot, Amass, theHarvester, and Recon-NG separately. One command queries **36 passive data sources** concurrently, correlates results with confidence scoring, detects subdomain takeover vulnerabilities, enriches data with WHOIS intelligence, scores risk, and generates professional reports — all without sending a single packet to the target.
 
 | | Reconx | Amass | SpiderFoot | theHarvester |
 |---|:---:|:---:|:---:|:---:|
-| **Passive only** | Yes | Partial | No | Yes |
-| **Concurrent sources** | 24+ | ~10 | 200+ (active) | ~15 |
-| **Subdomain enum** | Yes | Yes | Yes | Yes |
-| **Credential leaks** | Yes | No | Yes | Yes |
-| **Wireless discovery** | Yes | No | No | No |
-| **Asset mapping** | Yes | Partial | Yes | No |
-| **HTML reports** | Yes | No | Yes | No |
-| **Single binary** | Yes | Yes | No (Python) | No (Python) |
-| **Speed** | <60s | ~5min | ~10min | ~2min |
+| **Passive only** | ✅ | Partial | ❌ | ✅ |
+| **Concurrent sources** | 36 | ~10 | 200+ (active) | ~15 |
+| **Subdomain enum** | ✅ | ✅ | ✅ | ✅ |
+| **Credential leaks** | ✅ | ❌ | ✅ | ✅ |
+| **Subdomain takeover** | ✅ | ❌ | ❌ | ❌ |
+| **WHOIS intelligence** | ✅ | ✅ | ✅ | ❌ |
+| **Wireless discovery** | ✅ | ❌ | ❌ | ❌ |
+| **Asset mapping** | ✅ | Partial | ✅ | ❌ |
+| **Risk scoring** | ✅ | ❌ | ❌ | ❌ |
+| **Historical diff** | ✅ | ❌ | ❌ | ❌ |
+| **HTML + Markdown reports** | ✅ | ❌ | ✅ | ❌ |
+| **Single binary** | ✅ | ✅ | ❌ (Python) | ❌ (Python) |
+| **Speed** | <30s | ~5min | ~10min | ~2min |
 
 ---
 
-## Features
+## ✨ Features
 
-- **24+ Passive Data Sources** — crt.sh, VirusTotal, Shodan, SecurityTrails, AlienVault OTX, HackerTarget, Wayback Machine, Common Crawl, Have I Been Pwned, GitHub, Wigle.net, and more
+### Core Intelligence
+- **36 Passive Data Sources** — Certificate transparency, DNS, threat intel, search engines, breach databases, code leaks, wireless networks, and more
 - **Concurrent Execution** — All collectors run in parallel via Tokio async runtime with configurable concurrency limits
 - **Zero Active Scanning** — 100% passive reconnaissance. No port scans, no direct probing, no noise
-- **Multi-Format Reports** — Self-contained HTML with dark theme, structured JSON, and flat CSV exports
-- **Risk Scoring** — Automated risk assessment based on exposed surface area
-- **Credential Leak Detection** — Searches breach databases, paste sites, and code repositories for leaked secrets
-- **Wireless Network Discovery** — Queries Wigle.net for publicly known wireless networks associated with the target
-- **Attack Surface Mapping** — Correlates subdomains, IPs, ports, services, and technologies into a unified view
-- **Single Static Binary** — No runtime dependencies. Drop it anywhere and run
+
+### Analysis & Enrichment
+- **🎯 Subdomain Takeover Detection** — Scans CNAME records against 65+ known vulnerable service fingerprints (AWS S3, Azure, Heroku, GitHub Pages, Netlify, etc.)
+- **📋 WHOIS Intelligence** — Passive RDAP lookup for registrar, registration dates, expiry alerts, nameservers, and privacy protection status
+- **🔒 SSL/TLS Intelligence** — Certificate metadata extraction via crt.sh, SAN discovery, expiry detection, and self-signed cert flagging
+- **📊 Risk Scoring** — Weighted 0-10 risk score considering takeover candidates, exposed ports, credential leaks, and SSL issues with ranked Top Risk Factors
+
+### Comparison & Monitoring
+- **🔄 Historical Diff Mode** — Compare current scan against a previous JSON export to detect new subdomains, removed assets, and infrastructure drift
+- **🔍 Confidence Scoring** — Multi-source correlation ranks subdomains by confidence (found by 3 sources = more reliable than 1)
+
+### Probing
+- **🌐 HTTP Probing** — Live web service detection with status codes, titles, and redirect chains
+- **🔧 Technology Fingerprinting** — Detects web frameworks, CMS, CDNs, WAFs, and server software
+- **🚪 Sensitive Path Detection** — Checks for exposed `/.env`, `/.git/config`, `/admin`, `/swagger-ui/`, `/phpinfo.php`, and more
+
+### Reporting
+- **📄 Multi-Format Reports** — HTML, JSON, CSV, and Markdown
+- **📊 Executive Summary** — Risk score, top risk factors, and finding statistics
+- **🔗 Markdown Reports** — Ready to paste into GitHub Issues, Notion, Obsidian, or pentest reports
 
 ---
 
-## Installation
+## 🚀 Installation
 
 ### From Source
 
-Requires [Rust](https://rustup.rs/) 1.70+.
-
 ```bash
-git clone https://github.com/reconx/reconx.git
-cd reconx
+# Clone the repository
+git clone https://github.com/redshadow912/Reconx.git
+cd Reconx
+
+# Build optimized release binary
 cargo build --release
+
+# Binary will be at ./target/release/reconx
 ```
 
-The binary will be at `target/release/reconx`.
+### Requirements
 
-### Quick Install (Linux/macOS)
-
-```bash
-curl -L https://github.com/reconx/reconx/releases/latest/download/reconx-linux-amd64 -o reconx
-chmod +x reconx
-sudo mv reconx /usr/local/bin/
-```
-
-### Windows
-
-Download the latest `.exe` from [Releases](https://github.com/reconx/reconx/releases) and add it to your PATH.
+- **Rust** 1.70+ ([Install Rust](https://rustup.rs/))
+- Internet connection for passive API queries
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
 ```bash
-# Subdomain enumeration (no API keys needed)
+# Basic subdomain enumeration (no API keys needed)
 reconx enum -d example.com
 
-# Full intelligence sweep
+# Full intelligence gathering with all modules
 reconx intel -d example.com -v
 
-# Find leaked credentials
-reconx creds -d example.com -n "Example Corp"
+# Subdomain enumeration with DNS resolution
+reconx enum -d example.com --resolve --no-wildcard
 
-# Discover wireless networks
-reconx wireless -n "Example Corp"
+# Compare against a previous scan
+reconx enum -d example.com --diff ./reconx-output/example.com/20250101_120000/findings.json
 
-# Generate reports from previous scan
-reconx report -i findings.json -f html,csv
+# HTTP probe discovered subdomains
+reconx probe -d example.com -v
+
+# Asset discovery
+reconx assets -d example.com
+
+# Credential leak search
+reconx creds -d example.com
+
+# Wireless network discovery
+reconx wireless -n "Company Name"
 ```
 
 ---
 
-## Commands
+## 📖 Commands
 
 ### `reconx enum` — Subdomain Enumeration
 
-Discovers subdomains from certificate transparency logs, passive DNS databases, search engines, and web archives.
+Discovers subdomains from passive sources like certificate transparency logs, DNS databases, search engines, and web archives.
 
-```bash
-reconx enum -d example.com
-reconx enum -d example.com --sources crtsh,hackertarget,wayback
-reconx enum -d example.com --exclude dnsdumpster -c 20 -t 60
+```
+Usage: reconx enum [OPTIONS] --domain <DOMAIN>
+
+Options:
+  -d, --domain <DOMAIN>            Target domain
+  -o, --output <OUTPUT>            Output directory
+  -f, --format <FORMAT>            Report formats [possible values: html, json, csv, markdown]
+  -c, --concurrency <CONCURRENCY>  Max parallel collectors [default: 10]
+  -t, --timeout <TIMEOUT>          Per-source timeout in seconds [default: 30]
+      --sources <SOURCES>          Run only specific sources (comma-separated)
+      --exclude <EXCLUDE>          Exclude specific sources (comma-separated)
+      --resolve                    Resolve subdomains to IP addresses
+      --no-wildcard                Filter out wildcard subdomains
+      --diff <DIFF>                Compare against previous scan JSON
+  -v, --verbose                    Show detailed collector output
+  -q, --quiet                      Suppress all progress output
 ```
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `-d, --domain` | Target domain | *required* |
-| `-o, --output` | Output directory | `./reconx-output/<domain>/<timestamp>/` |
-| `-f, --format` | Report formats (comma-separated) | `html,json,csv` |
-| `-c, --concurrency` | Max parallel collectors | `10` |
-| `-t, --timeout` | Per-source timeout (seconds) | `30` |
-| `--sources` | Run only specific sources | all available |
-| `--exclude` | Exclude specific sources | none |
-| `-v, --verbose` | Show detailed collector logs | off |
-| `-q, --quiet` | Suppress progress output | off |
-| `--no-color` | Disable colored terminal output | off |
+### `reconx intel` — Full Intelligence Gathering
 
-**Sources queried:** crt.sh, HackerTarget, DNSDumpster, Anubis, ThreatHunter, ThreatMiner, Wayback Machine, Common Crawl, DuckDuckGo, VirusTotal*, SecurityTrails*, AlienVault OTX*, URLScan*, FullHunt*, Censys*, IntelX*, CertStream
+Runs **all** collector modules simultaneously — subdomains, assets, credentials, emails, code leaks, WHOIS, and wireless.
 
-*Requires API key
-
----
+```bash
+reconx intel -d example.com -v
+```
 
 ### `reconx assets` — Asset Discovery
 
-Discovers public-facing IPs, open ports, running services, and technology stacks from passive host databases.
+Discovers public-facing IP addresses, open ports, services, and technologies using Shodan, Censys, InternetDB, and other passive sources.
 
 ```bash
 reconx assets -d example.com
-reconx assets -d example.com -f json
 ```
 
-**Sources queried:** Shodan (passive), Censys (passive), BGPView, IPinfo, HackerTarget
+### `reconx creds` — Credential Leak Detection
 
----
-
-### `reconx creds` — Credential & Breach Detection
-
-Searches breach databases, paste sites, and code repositories for leaked credentials, API keys, and sensitive data associated with the target domain.
+Searches Have I Been Pwned, IntelX, GitHub code leaks, and other breach databases for leaked credentials.
 
 ```bash
 reconx creds -d example.com
-reconx creds -d example.com -n "Example Corporation"
 ```
 
-| Flag | Description |
-|------|-------------|
-| `-n, --name` | Organization name for broader search |
+### `reconx probe` — HTTP Probing
 
-**Sources queried:** Have I Been Pwned, IntelX, GitHub code search, Pastebin
+Probes discovered subdomains for live web services. Detects technologies, CDNs, WAFs, and sensitive exposed paths.
 
----
+```bash
+# Probe from previous enum results
+reconx probe --input ./reconx-output/example.com/findings.json
+
+# Or enumerate + probe in one step
+reconx probe -d example.com -v
+```
 
 ### `reconx wireless` — Wireless Network Discovery
 
-Queries the Wigle.net wardriving database for publicly known wireless networks associated with the target organization.
+Searches Wigle.net for wireless networks associated with the target organization.
 
 ```bash
-reconx wireless -n "Example Corp"
-reconx wireless -n "Example Corp" -f html,json
+reconx wireless -n "Company Name"
 ```
-
-**Sources queried:** Wigle.net
-
-**Data returned:** SSID, BSSID, encryption type, channel, geolocation, last seen date
-
----
-
-### `reconx intel` — Full Intelligence Sweep
-
-Runs **all** available modules in a single pass. The most comprehensive scan mode.
-
-```bash
-reconx intel -d example.com
-reconx intel -d example.com -n "Example Corp" -v
-reconx intel -d example.com --sources crtsh,shodan,hibp -f html
-```
-
-Accepts all flags from `enum` plus `-n, --name` for organization-level searches.
-
----
-
-### `reconx report` — Report Generation
-
-Generates reports from a previously saved JSON scan result.
-
-```bash
-reconx report -i ./reconx-output/example.com/20260708_120000/findings.json
-reconx report -i findings.json -f html -o ./my-reports/
-```
-
----
 
 ### `reconx config` — API Key Management
 
 ```bash
 # Set an API key
-reconx config set virustotal YOUR_API_KEY_HERE
-reconx config set shodan YOUR_API_KEY_HERE
+reconx config set shodan YOUR_API_KEY
 
-# View a key (masked)
-reconx config get virustotal
-
-# List all configured keys
+# List configured keys
 reconx config list
 
-# Show config file location
+# Show config file path
 reconx config path
 ```
 
----
+### `reconx report` — Regenerate Reports
 
-## API Keys
-
-Reconx works out of the box with **10 free sources** that require no API keys. Configure API keys to unlock the full power of **24+ sources**.
-
-### Configuring Keys
-
-**Option 1: CLI (recommended)**
-```bash
-reconx config set <source> <api_key>
-```
-
-**Option 2: Config file**
-
-Edit `~/.config/reconx/config.toml` (Linux/macOS) or `%APPDATA%\reconx\config.toml` (Windows):
-
-```toml
-concurrency = 10
-timeout_secs = 30
-
-[api_keys]
-virustotal = "your-api-key"
-shodan = "your-api-key"
-securitytrails = "your-api-key"
-alienvault = "your-api-key"
-urlscan = "your-api-key"
-fullhunt = "your-api-key"
-censys = "id:secret"
-intelx = "your-api-key"
-hibp = "your-api-key"
-github = "your-github-token"
-wigle = "your-api-key"
-ipinfo = "your-api-key"
-```
-
-### Complete API Key Reference
-
-| Source | Key Name | Free Tier | Sign Up |
-|--------|----------|-----------|---------|
-| **VirusTotal** | `virustotal` | 500 req/day | [virustotal.com](https://www.virustotal.com/gui/join-us) |
-| **Shodan** | `shodan` | 100 results/query | [shodan.io](https://account.shodan.io/register) |
-| **SecurityTrails** | `securitytrails` | 50 req/month | [securitytrails.com](https://securitytrails.com/app/signup) |
-| **AlienVault OTX** | `alienvault` | Unlimited | [otx.alienvault.com](https://otx.alienvault.com/) |
-| **URLScan** | `urlscan` | 100 req/day | [urlscan.io](https://urlscan.io/user/signup) |
-| **FullHunt** | `fullhunt` | 50 req/month | [fullhunt.io](https://fullhunt.io/) |
-| **Censys** | `censys` | 250 req/month | [search.censys.io](https://search.censys.io/register) |
-| **Intelligence X** | `intelx` | Limited free | [intelx.io](https://intelx.io/signup) |
-| **Have I Been Pwned** | `hibp` | 10 req/min | [haveibeenpwned.com](https://haveibeenpwned.com/API/Key) |
-| **GitHub** | `github` | 30 req/min | [github.com/settings/tokens](https://github.com/settings/tokens) |
-| **Wigle.net** | `wigle` | 100 req/day | [wigle.net](https://wigle.net/register) |
-| **IPinfo** | `ipinfo` | 50k req/month | [ipinfo.io](https://ipinfo.io/signup) |
-
-> **Note:** Censys uses `id:secret` format (e.g., `reconx config set censys "abc123:def456"`)
-
-### Sources That Need No API Key
-
-These work immediately out of the box:
-
-| Source | Category |
-|--------|----------|
-| crt.sh | Certificate Transparency |
-| HackerTarget | DNS/Subdomain |
-| DNSDumpster | DNS/Subdomain |
-| Anubis | DNS/Subdomain |
-| ThreatHunter | Threat Intel |
-| ThreatMiner | Threat Intel |
-| Wayback Machine | Web Archives |
-| Common Crawl | Web Archives |
-| DuckDuckGo | Search Engine |
-| BGPView | WHOIS/ASN |
-| CertStream | Certificate Transparency |
-| Pastebin | Code/Doc Leaks |
-
----
-
-## Reports
-
-Every scan automatically generates reports in `./reconx-output/<domain>/<timestamp>/`:
-
-### HTML Report
-
-Self-contained single-file report with:
-- Executive summary with risk score and metrics cards
-- Color-coded severity badges (Critical / High / Medium / Low / Info)
-- Collapsible sections per finding category
-- Sortable data tables
-- Dark theme, works offline
-
-### JSON Export
-
-Full structured data with source attribution and timestamps:
-```json
-[
-  {
-    "type": "Subdomain",
-    "subdomain": "api.example.com",
-    "source": "crt.sh",
-    "ip_addresses": ["93.184.216.34"],
-    "confidence": 3,
-    "discovered_at": "2026-07-08T12:00:00Z"
-  }
-]
-```
-
-### CSV Exports
-
-Flat tables per category for pipeline integration:
-- `subdomains.csv` — subdomain, source, IPs, confidence, timestamp
-- `assets.csv` — host, IP, ports, services, technologies, source, timestamp
-- `credentials.csv` — email, breach source, data types, severity, source, timestamp
-- `wireless.csv` — SSID, BSSID, encryption, channel, source, timestamp
-
----
-
-## Architecture
-
-```
-reconx/
-├── src/
-│   ├── main.rs              Entry point & CLI dispatch
-│   ├── cli.rs               Subcommand definitions (clap)
-│   ├── config.rs            TOML config & API key management
-│   ├── error.rs             Unified error types
-│   ├── models/              Data structures
-│   │   ├── finding.rs       Unified Finding enum & Severity
-│   │   ├── subdomain.rs     Subdomain findings
-│   │   ├── asset.rs         Asset/host findings
-│   │   ├── credential.rs    Credential leak findings
-│   │   ├── wireless.rs      Wireless network findings
-│   │   └── vulnerability.rs Vulnerability findings
-│   ├── collectors/          24 data source modules
-│   │   ├── mod.rs           Collector trait & concurrent executor
-│   │   ├── crtsh.rs         Certificate Transparency
-│   │   ├── virustotal.rs    Passive DNS & subdomains
-│   │   ├── shodan.rs        Passive host/service data
-│   │   ├── ...              (21 more collectors)
-│   │   └── wigle.rs         Wireless network data
-│   ├── analyzers/           Intelligence processing
-│   │   ├── correlator.rs    Cross-source dedup & merge
-│   │   ├── risk_scorer.rs   Automated risk scoring
-│   │   ├── tech_fingerprint.rs Technology identification
-│   │   └── attack_surface.rs  Attack surface mapping
-│   ├── reports/             Output generation
-│   │   ├── html.rs          HTML report builder
-│   │   ├── json.rs          JSON export
-│   │   └── csv.rs           CSV export
-│   └── output/              Terminal & file I/O
-│       ├── terminal.rs      Progress bars & colored output
-│       └── writer.rs        File output orchestration
-└── Cargo.toml
-```
-
-### Key Design Decisions
-
-- **Collector Trait** — Every data source implements a common async trait, making it trivial to add new sources
-- **Arc-based Concurrency** — Collectors are wrapped in `Arc<dyn Collector>` for safe concurrent execution via `tokio::spawn`
-- **Semaphore Control** — Configurable concurrency limit prevents API rate limiting and resource exhaustion
-- **Graceful Degradation** — Missing API keys are skipped with a warning, not a crash
-
----
-
-## Advanced Usage
-
-### Pipeline Integration
+Generate new reports from previously saved findings.
 
 ```bash
-# JSON-only output for piping to jq
-reconx enum -d example.com -f json -q | jq '.[] | select(.type == "Subdomain") | .subdomain'
-
-# Feed subdomains into another tool
-reconx enum -d example.com -f json -q && \
-  cat reconx-output/example.com/*/findings.json | \
-  jq -r '.[] | select(.type == "Subdomain") | .subdomain' | \
-  sort -u > subdomains.txt
+reconx report --input findings.json --format html,markdown
 ```
 
-### Custom Source Selection
+---
+
+## 🔌 Data Sources
+
+Reconx integrates **36 passive data sources** across 8 categories:
+
+### Certificate Transparency
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [crt.sh](https://crt.sh/) | ❌ | Certificate transparency log search |
+| [CertSpotter](https://sslmate.com/certspotter/) | ❌ | SSLMate certificate transparency monitoring |
+| [CertStream](https://certstream.calidog.io/) | ❌ | Real-time certificate transparency log streaming |
+
+### DNS & Subdomain Discovery
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [HackerTarget](https://hackertarget.com/) | ❌ | DNS lookup and host search |
+| [Anubis](https://jldc.me/) | ❌ | Subdomain enumeration |
+| [RapidDNS](https://rapiddns.io/) | ❌ | Fast DNS database search |
+| [SubdomainCenter](https://www.subdomain.center/) | ❌ | Subdomain aggregation service |
+| [ThreatCrowd](https://www.threatcrowd.org/) | ❌ | Threat intelligence search |
+| [ThreatMiner](https://www.threatminer.org/) | ❌ | Threat intelligence data mining |
+| [DNSDumpster](https://dnsdumpster.com/) | ❌ | DNS reconnaissance |
+| [SecurityTrails](https://securitytrails.com/) | ✅ | Comprehensive DNS and domain intelligence |
+| [Chaos](https://chaos.projectdiscovery.io/) | ✅ | ProjectDiscovery's asset database |
+
+### Search Engines & Archives
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [Wayback Machine](https://web.archive.org/) | ❌ | Internet Archive historical URL data |
+| [Common Crawl](https://commoncrawl.org/) | ❌ | Web crawl data repository |
+| [DuckDuckGo](https://duckduckgo.com/) | ❌ | Privacy-focused search engine scraping |
+| [URLScan](https://urlscan.io/) | ✅ | Website scanner and analysis |
+
+### Threat Intelligence
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [VirusTotal](https://www.virustotal.com/) | ✅ | File and URL analysis platform |
+| [AlienVault OTX](https://otx.alienvault.com/) | ✅ | Open threat intelligence community |
+| [ThreatHunter](https://threathunter.ai/) | ❌ | AI-powered threat hunting |
+| [Shodan](https://www.shodan.io/) | ✅ | Internet-connected device search |
+| [Censys](https://censys.io/) | ✅ | Internet-wide scanning data |
+| [InternetDB](https://internetdb.shodan.io/) | ❌ | Shodan's free lightweight API |
+| [FullHunt](https://fullhunt.io/) | ✅ | Attack surface management |
+| [IPInfo](https://ipinfo.io/) | ✅ | IP geolocation and ASN data |
+| [BGPView](https://bgpview.io/) | ❌ | BGP and ASN lookup |
+
+### Credential & Breach Intelligence
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [Have I Been Pwned](https://haveibeenpwned.com/) | ❌ | Breach notification service |
+| [IntelX](https://intelx.io/) | ✅ | Intelligence search engine |
+| [LeakIX](https://leakix.net/) | ✅ | Leaked database search |
+| [Pastebin](https://pastebin.com/) | ❌ | Paste site monitoring |
+
+### Code Leak Detection
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [GitHub Dorks](https://github.com/) | ✅ | GitHub code search for exposed secrets |
+
+### Email Harvesting
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [Hunter.io](https://hunter.io/) | ✅ | Professional email finder |
+
+### Domain Intelligence
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [WHOIS/RDAP](https://rdap.org/) | ❌ | Domain registration intelligence via RDAP |
+
+### Search Engine Intelligence
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [FOFA](https://fofa.info/) | ✅ | Cyberspace search engine |
+| [ZoomEye](https://www.zoomeye.org/) | ✅ | Cyberspace search engine |
+| [Netlas](https://netlas.io/) | ✅ | Internet intelligence search |
+
+### Wireless
+| Source | API Key | Description |
+|--------|:-------:|-------------|
+| [Wigle.net](https://wigle.net/) | ✅ | Wireless network database |
+
+> **Free sources work out of the box.** Add API keys for enhanced coverage. Most services offer free tiers.
+
+---
+
+## 🔑 API Keys
+
+Configure API keys to unlock additional data sources:
 
 ```bash
-# Only use fast, free sources
-reconx enum -d example.com --sources crtsh,hackertarget,anubis,wayback
+# Essential (free tier available)
+reconx config set virustotal YOUR_KEY
+reconx config set shodan YOUR_KEY
+reconx config set censys YOUR_KEY
+reconx config set github YOUR_TOKEN
 
-# Exclude slow sources
-reconx enum -d example.com --exclude commoncrawl,certstream
+# Extended coverage
+reconx config set alienvault YOUR_KEY
+reconx config set urlscan YOUR_KEY
+reconx config set intelx YOUR_KEY
+reconx config set ipinfo YOUR_KEY
+reconx config set hunter YOUR_KEY
+reconx config set wigle YOUR_KEY
+reconx config set securitytrails YOUR_KEY
+reconx config set leakix YOUR_KEY
+reconx config set fofa EMAIL:KEY
+reconx config set zoomeye YOUR_KEY
+reconx config set netlas YOUR_KEY
+reconx config set fullhunt YOUR_KEY
+reconx config set chaos YOUR_KEY
 ```
 
-### High-Concurrency Scans
+API keys are stored locally in your system config directory (`~/.config/reconx/config.toml`). They are **never** transmitted anywhere except to their respective APIs.
 
-```bash
-# Max parallelism for fast results
-reconx intel -d example.com -c 20 -t 60 -v
+---
+
+## 📊 Reports
+
+Reconx generates reports in 4 formats:
+
+| Format | File | Description |
+|--------|------|-------------|
+| **HTML** | `report.html` | Interactive report with statistics and tables |
+| **Markdown** | `report.md` | Structured report with emoji badges, risk factors — paste into GitHub/Notion/Obsidian |
+| **JSON** | `findings.json` | Machine-readable findings for integration with other tools |
+| **CSV** | `subdomains.csv`, `assets.csv`, `credentials.csv`, etc. | Spreadsheet-friendly per-category exports |
+
+Reports are saved to `./reconx-output/<domain>/<timestamp>/` by default.
+
+### Example Markdown Report Structure
+
 ```
+📊 Executive Summary
+  Risk Score: 4.5/10 (MEDIUM)
+  Subdomains: 570 | Assets: 2 | Credentials: 36
 
-### CI/CD Integration
+⚠️ Top Risk Factors
+  🟠 Credential Leaks — 36 credential leaks
+  🟡 Subdomain Exposure — 570 subdomains
 
-```yaml
-# GitHub Actions example
-- name: Run Reconx
-  run: |
-    reconx intel -d ${{ secrets.TARGET_DOMAIN }} -f json -q
-    cat reconx-output/*/findings.json > findings.json
+🌐 Subdomains (with confidence scores)
+🖥️ Assets & Services
+🔑 Credential Leaks
+📋 WHOIS Intelligence
+🔒 SSL/TLS Certificates
 ```
 
 ---
 
-## Performance
+## 🏗️ Architecture
 
-Benchmarked on a standard laptop (4 cores, 16GB RAM):
-
-| Scan Mode | Typical Time | Findings (avg) |
-|-----------|-------------|----------------|
-| `enum` (free sources only) | 15-30s | 50-500 subdomains |
-| `enum` (all sources) | 30-60s | 200-5000 subdomains |
-| `intel` (all sources) | 45-90s | 500-10000+ findings |
-| `creds` | 10-30s | 0-100 credential leaks |
-| `wireless` | 5-15s | 0-50 networks |
-
-Memory usage stays under 200MB even for large domains with 10,000+ subdomains.
-
----
-
-## Contributing
-
-Contributions are welcome. To add a new data source:
-
-1. Create a new file in `src/collectors/` (e.g., `src/collectors/mysource.rs`)
-2. Implement the `Collector` trait:
-
-```rust
-use async_trait::async_trait;
-use crate::collectors::{Collector, CollectorCategory};
-use crate::config::Config;
-use crate::error::Result;
-use crate::models::{Finding, Target};
-
-pub struct MySourceCollector;
-
-#[async_trait]
-impl Collector for MySourceCollector {
-    fn name(&self) -> &str { "mysource" }
-    fn category(&self) -> CollectorCategory { CollectorCategory::DnsSubdomain }
-    fn requires_api_key(&self) -> bool { false }
-
-    async fn collect(&self, target: &Target, config: &Config) -> Result<Vec<Finding>> {
-        // Your implementation here
-        Ok(Vec::new())
-    }
-}
+```
+src/
+├── main.rs              # CLI entrypoint and orchestration
+├── cli.rs               # Command-line argument definitions (clap)
+├── config.rs            # API key management and persistence
+├── error.rs             # Error types
+├── dns/                 # DNS resolution and wildcard detection
+├── collectors/          # 36 data source collectors
+│   ├── mod.rs           # Collector trait + registry + async executor
+│   ├── crtsh.rs         # Certificate Transparency
+│   ├── shodan.rs        # Shodan API
+│   ├── virustotal.rs    # VirusTotal API
+│   ├── whois_rdap.rs    # WHOIS/RDAP intelligence
+│   └── ...              # 32 more collectors
+├── models/              # Data models
+│   ├── finding.rs       # Core Finding enum (Subdomain, Asset, Credential, Whois, Ssl, ...)
+│   ├── subdomain.rs     # Subdomain finding with confidence scoring
+│   └── ...              # Per-type models
+├── analyzers/           # Intelligence analysis pipeline
+│   ├── correlator.rs    # Multi-source deduplication and confidence scoring
+│   ├── risk_scorer.rs   # Weighted risk analysis with top factors
+│   ├── takeover_detector.rs  # Subdomain takeover detection (65+ fingerprints)
+│   ├── diff_engine.rs   # Historical scan comparison
+│   ├── tech_fingerprint.rs   # Technology stack profiling
+│   └── attack_surface.rs     # Attack surface mapping
+├── probe/               # Active probing (opt-in)
+│   ├── http.rs          # HTTP prober with sensitive path detection
+│   ├── ssl_info.rs      # SSL certificate intelligence
+│   ├── tech_detect.rs   # Technology detection engine
+│   └── cdn_detect.rs    # CDN/WAF detection
+├── output/              # Output formatting
+│   ├── terminal.rs      # Colored terminal output with progress bars
+│   └── writer.rs        # Multi-format report orchestration
+└── reports/             # Report generators
+    ├── html.rs          # Interactive HTML reports
+    ├── markdown.rs      # Structured Markdown with risk badges
+    ├── json.rs          # Machine-readable JSON
+    └── csv.rs           # Per-category CSV exports
 ```
 
-3. Register it in `src/collectors/mod.rs`
-4. Submit a pull request
+### Data Flow
+
+```
+Target Domain
+    │
+    ▼
+┌─────────────────────┐
+│  Collector Registry  │ ── 36 passive sources run concurrently
+└─────────────────────┘
+    │
+    ▼
+┌─────────────────────┐
+│  Correlator          │ ── Dedup + multi-source confidence scoring
+└─────────────────────┘
+    │
+    ▼
+┌─────────────────────┐
+│  Analyzers           │ ── Takeover detection, risk scoring,
+│                      │    tech fingerprinting, attack surface
+└─────────────────────┘
+    │
+    ▼
+┌─────────────────────┐
+│  Report Writers      │ ── HTML, Markdown, JSON, CSV
+└─────────────────────┘
+```
 
 ---
 
-## Legal & Ethics
+## 🔒 Passive-Only Philosophy
 
-Reconx is designed for **authorized security testing** and **legitimate research** only. Users are responsible for:
+Reconx is designed to be **completely passive** by default:
 
-- Obtaining proper authorization before scanning any target
-- Complying with applicable laws and regulations
-- Respecting API terms of service for all data sources
-- Using findings responsibly and ethically
+- ❌ No port scanning
+- ❌ No direct connection to target infrastructure
+- ❌ No DNS brute-forcing
+- ❌ No web crawling or spidering
+- ✅ Only queries third-party APIs and public databases
+- ✅ Safe for pre-engagement reconnaissance
+- ✅ No risk of triggering IDS/IPS or WAF alerts
 
-Reconx performs **zero active scanning** — it only queries publicly available data sources and APIs.
+> **Note:** The `probe` command performs HTTP GET requests to discovered subdomains. This is opt-in and clearly separated from passive collection.
 
 ---
 
-## License
+## 📜 License
 
-MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 <div align="center">
 
-**Built with Rust for speed, safety, and simplicity.**
+**Built with ❤️ and Rust 🦀**
 
-`cargo build --release && ./target/release/reconx intel -d target.com`
+*If you find Reconx useful, consider giving it a ⭐ on GitHub!*
 
 </div>

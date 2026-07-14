@@ -118,11 +118,15 @@ impl TerminalOutput {
         }
 
         let (icon, text) = match finding {
-            Finding::Subdomain(s) => ("SUB", &s.subdomain),
-            Finding::Asset(a) => ("AST", &format!("{} ({})", a.host, a.ip)),
-            Finding::Credential(c) => ("CRD", &c.email),
-            Finding::Wireless(w) => ("WFI", &format!("{} [{}]", w.ssid, w.encryption)),
-            Finding::Vulnerability(v) => ("VLN", &v.description),
+            Finding::Subdomain(s) => ("SUB", format!("{}", s.subdomain)),
+            Finding::Asset(a) => ("AST", format!("{} ({})", a.host, a.ip)),
+            Finding::Credential(c) => ("CRD", format!("{}", c.email)),
+            Finding::Wireless(w) => ("WFI", format!("{} [{}]", w.ssid, w.encryption)),
+            Finding::Vulnerability(v) => ("VLN", format!("{}", v.description)),
+            Finding::Email(e) => ("EML", format!("{}", e.email)),
+            Finding::HttpProbe(p) => ("PRB", format!("{} [{}]", p.url, p.status_code)),
+            Finding::Whois(w) => ("WHO", format!("{} ({})", w.domain, w.registrar.as_deref().unwrap_or("unknown"))),
+            Finding::Ssl(s) => ("SSL", format!("{} ({})", s.host, if s.is_expired { "EXPIRED" } else { "valid" })),
         };
 
         let severity = finding.severity();
@@ -138,7 +142,7 @@ impl TerminalOutput {
             }
         };
 
-        println!("  {} {}", colored_icon, text);
+        println!("  {} {}", colored_icon, &text);
     }
 
     pub fn print_summary(&self, findings: &[Finding], duration_ms: u64) {
@@ -158,10 +162,12 @@ impl TerminalOutput {
         let credentials = findings.iter().filter(|f| matches!(f, Finding::Credential(_))).count();
         let wireless = findings.iter().filter(|f| matches!(f, Finding::Wireless(_))).count();
         let vulns = findings.iter().filter(|f| matches!(f, Finding::Vulnerability(_))).count();
+        let emails = findings.iter().filter(|f| matches!(f, Finding::Email(_))).count();
+        let probes = findings.iter().filter(|f| matches!(f, Finding::HttpProbe(_))).count();
 
         let summary = format!(
-            "Total: {} findings | Subdomains: {} | Assets: {} | Credentials: {} | Wireless: {} | Vulnerabilities: {}",
-            findings.len(), subdomains, assets, credentials, wireless, vulns
+            "Total: {} findings | Subdomains: {} | Assets: {} | Credentials: {} | Emails: {} | Probes: {} | Wireless: {} | Vulnerabilities: {}",
+            findings.len(), subdomains, assets, credentials, emails, probes, wireless, vulns
         );
 
         if self.no_color {

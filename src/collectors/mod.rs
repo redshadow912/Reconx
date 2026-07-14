@@ -22,6 +22,18 @@ pub mod pastebin;
 pub mod wigle;
 pub mod ipinfo;
 pub mod certstream;
+pub mod internetdb;
+pub mod certspotter;
+pub mod hunter;
+pub mod subdomaincenter;
+pub mod threatcrowd;
+pub mod rapiddns;
+pub mod leakix;
+pub mod chaos;
+pub mod netlas;
+pub mod zoomeye;
+pub mod fofa;
+pub mod whois_rdap;
 
 use async_trait::async_trait;
 use std::sync::Arc;
@@ -43,6 +55,7 @@ pub enum CollectorCategory {
     HostService,
     Wireless,
     WhoisAsn,
+    EmailHarvesting,
 }
 
 impl std::fmt::Display for CollectorCategory {
@@ -58,6 +71,7 @@ impl std::fmt::Display for CollectorCategory {
             Self::HostService => write!(f, "Host/Service"),
             Self::Wireless => write!(f, "Wireless"),
             Self::WhoisAsn => write!(f, "WHOIS/ASN"),
+            Self::EmailHarvesting => write!(f, "Email Harvesting"),
         }
     }
 }
@@ -65,6 +79,7 @@ impl std::fmt::Display for CollectorCategory {
 #[async_trait]
 pub trait Collector: Send + Sync {
     fn name(&self) -> &str;
+    fn config_key(&self) -> &str { self.name() }
     fn category(&self) -> CollectorCategory;
     fn requires_api_key(&self) -> bool;
     async fn collect(&self, target: &Target, config: &Config) -> Result<Vec<Finding>>;
@@ -108,6 +123,18 @@ impl CollectorRegistry {
         self.collectors.push(Arc::new(wigle::WigleCollector));
         self.collectors.push(Arc::new(ipinfo::IpInfoCollector));
         self.collectors.push(Arc::new(certstream::CertStreamCollector));
+        self.collectors.push(Arc::new(internetdb::InternetDbCollector));
+        self.collectors.push(Arc::new(certspotter::CertSpotterCollector));
+        self.collectors.push(Arc::new(hunter::HunterIoCollector));
+        self.collectors.push(Arc::new(subdomaincenter::SubdomainCenterCollector));
+        self.collectors.push(Arc::new(threatcrowd::ThreatCrowdCollector));
+        self.collectors.push(Arc::new(rapiddns::RapidDnsCollector));
+        self.collectors.push(Arc::new(leakix::LeakIxCollector));
+        self.collectors.push(Arc::new(chaos::ChaosCollector));
+        self.collectors.push(Arc::new(netlas::NetlasCollector));
+        self.collectors.push(Arc::new(zoomeye::ZoomEyeCollector));
+        self.collectors.push(Arc::new(fofa::FofaCollector));
+        self.collectors.push(Arc::new(whois_rdap::WhoisRdapCollector));
     }
 
     pub fn get_collectors(

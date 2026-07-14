@@ -53,6 +53,22 @@ impl Correlator {
         let mut seen_assets = std::collections::HashSet::new();
         let mut seen_creds = std::collections::HashSet::new();
         let mut seen_wireless = std::collections::HashSet::new();
+        let mut seen_emails = std::collections::HashSet::new();
+        let mut seen_probes = std::collections::HashSet::new();
+        let mut seen_whois = std::collections::HashSet::new();
+        let mut seen_ssl = std::collections::HashSet::new();
+
+        // First pass: collect all sources per subdomain for confidence scoring
+        let mut subdomain_sources: std::collections::HashMap<String, Vec<String>> =
+            std::collections::HashMap::new();
+        for finding in &findings {
+            if let Finding::Subdomain(s) = finding {
+                subdomain_sources
+                    .entry(s.subdomain.clone())
+                    .or_default()
+                    .push(s.source.clone());
+            }
+        }
 
         let mut deduped = Vec::new();
 
@@ -60,7 +76,12 @@ impl Correlator {
             match &finding {
                 Finding::Subdomain(s) => {
                     if seen_subdomains.insert(s.subdomain.clone()) {
-                        deduped.push(finding);
+                        // Enrich the first occurrence with multi-source confidence
+                        let mut enriched = s.clone();
+                        if let Some(sources) = subdomain_sources.get(&s.subdomain) {
+                            enriched.confidence = (sources.len() as u8).min(10);
+                        }
+                        deduped.push(Finding::Subdomain(enriched));
                     }
                 }
                 Finding::Asset(a) => {
@@ -83,6 +104,27 @@ impl Correlator {
                 }
                 Finding::Vulnerability(_) => {
                     deduped.push(finding);
+                }
+                Finding::Email(e) => {
+                    if seen_emails.insert(e.email.clone()) {
+                        deduped.push(finding);
+                    }
+                }
+                Finding::HttpProbe(p) => {
+                    if seen_probes.insert(p.url.clone()) {
+                        deduped.push(finding);
+                    }
+                }
+                Finding::Whois(w) => {
+                    if seen_whois.insert(w.domain.clone()) {
+                        deduped.push(finding);
+                    }
+                }
+                Finding::Ssl(s) => {
+                    let key = format!("{}:{}", s.host, s.port);
+                    if seen_ssl.insert(key) {
+                        deduped.push(finding);
+                    }
                 }
             }
         }

@@ -1,13 +1,21 @@
 pub mod asset;
 pub mod credential;
+pub mod email;
 pub mod finding;
+pub mod http_probe;
+pub mod ssl;
 pub mod subdomain;
 pub mod vulnerability;
+pub mod whois;
 pub mod wireless;
 
 pub use asset::{AssetFinding, ServiceInfo};
 pub use credential::CredentialFinding;
+pub use email::EmailFinding;
 pub use finding::{Finding, Target};
+pub use http_probe::HttpProbeFinding;
+pub use ssl::SslFinding;
 pub use subdomain::SubdomainFinding;
 pub use vulnerability::VulnFinding;
+pub use whois::WhoisFinding;
 pub use wireless::WirelessFinding;

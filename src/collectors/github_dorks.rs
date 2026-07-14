@@ -42,6 +42,10 @@ impl Collector for GithubDorksCollector {
         "github_dorks"
     }
 
+    fn config_key(&self) -> &str {
+        "github"
+    }
+
     fn category(&self) -> CollectorCategory {
         CollectorCategory::CodeDocLeaks
     }
