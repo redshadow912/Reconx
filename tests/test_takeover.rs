@@ -1,4 +1,4 @@
-use reconx::analyzers::takeover_detector::{TakeoverDetector, TakeoverResult};
+use reconx::analyzers::takeover_detector::TakeoverDetector;
 use reconx::models::{Finding, SubdomainFinding};
 use reconx::models::finding::Severity;
 

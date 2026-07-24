@@ -1,5 +1,5 @@
 use reconx::analyzers::risk_scorer::RiskScorer;
-use reconx::models::{Finding, SubdomainFinding, CredentialFinding, AssetFinding};
+use reconx::models::{Finding, SubdomainFinding, CredentialFinding};
 use reconx::models::finding::Severity;
 
 fn make_subdomain(name: &str) -> Finding {
