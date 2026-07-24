@@ -4,6 +4,7 @@ use std::path::Path;
 use crate::models::Finding;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct DiffResult {
     pub new_subdomains: Vec<String>,
     pub removed_subdomains: Vec<String>,

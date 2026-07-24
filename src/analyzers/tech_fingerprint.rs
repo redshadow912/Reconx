@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use crate::models::Finding;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct TechProfile {
     pub host: String,
     pub technologies: Vec<String>,

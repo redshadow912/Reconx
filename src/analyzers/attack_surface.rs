@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::models::Finding;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct AttackSurfaceNode {
     pub host: String,
     pub ips: Vec<String>,
@@ -12,6 +13,7 @@ pub struct AttackSurfaceNode {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct AttackSurface {
     pub domain: String,
     pub nodes: Vec<AttackSurfaceNode>,

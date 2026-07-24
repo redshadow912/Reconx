@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["Reconx Contributors"]
 description = "Fast, passive-only OSINT reconnaissance tool for subdomain enumeration and domain intelligence gathering"
 license = "MIT"
-repository = "https://github.com/reconx/reconx"
+repository = "https://github.com/redshadow912/Reconx"
 keywords = ["osint", "reconnaissance", "subdomain", "security", "pentesting"]
 categories = ["command-line-utilities"]
 

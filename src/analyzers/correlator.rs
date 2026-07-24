@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::models::Finding;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct CorrelatedSubdomain {
     pub subdomain: String,
     pub sources: Vec<String>,

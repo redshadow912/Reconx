@@ -1,27 +1,19 @@
-#![allow(dead_code)]
-
-mod analyzers;
-mod cli;
-mod collectors;
-mod config;
-mod dns;
-mod error;
-mod models;
-mod output;
-mod probe;
-mod reports;
 
 use std::path::PathBuf;
 
 use clap::Parser;
 use colored::Colorize;
 
-use cli::{Cli, Commands, ConfigAction, ReportFormat};
-use collectors::{CollectorRegistry, run_collectors};
-use config::Config;
-use models::{Finding, Target};
-use output::terminal::TerminalOutput;
-use output::writer::OutputWriter;
+use reconx::analyzers;
+use reconx::cli::{Cli, Commands, ConfigAction, ReportFormat};
+use reconx::collectors::{self, CollectorRegistry, run_collectors};
+use reconx::config::Config;
+use reconx::dns;
+use reconx::models::{self, Finding, Target};
+use reconx::output::terminal::TerminalOutput;
+use reconx::output::writer::OutputWriter;
+use reconx::probe;
+
 
 #[tokio::main]
 async fn main() {

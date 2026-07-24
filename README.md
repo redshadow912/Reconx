@@ -29,8 +29,8 @@ Reconx replaces the need to juggle SpiderFoot, Amass, theHarvester, and Recon-NG
 
 | | Reconx | Amass | SpiderFoot | theHarvester |
 |---|:---:|:---:|:---:|:---:|
-| **Passive only** | ✅ | Partial | ❌ | ✅ |
-| **Concurrent sources** | 36 | ~10 | 200+ (active) | ~15 |
+| **Passive only** | ✅ | Partial | Partial | ✅ |
+| **Concurrent sources** | 36 | ~30+ | 200+ (active/passive) | ~15 |
 | **Subdomain enum** | ✅ | ✅ | ✅ | ✅ |
 | **Credential leaks** | ✅ | ❌ | ✅ | ✅ |
 | **Subdomain takeover** | ✅ | ❌ | ❌ | ❌ |
@@ -41,7 +41,7 @@ Reconx replaces the need to juggle SpiderFoot, Amass, theHarvester, and Recon-NG
 | **Historical diff** | ✅ | ❌ | ❌ | ❌ |
 | **HTML + Markdown reports** | ✅ | ❌ | ✅ | ❌ |
 | **Single binary** | ✅ | ✅ | ❌ (Python) | ❌ (Python) |
-| **Speed** | <30s | ~5min | ~10min | ~2min |
+| **Execution Speed** | Very Fast | Slow | Slow | Fast |
 
 ---
 

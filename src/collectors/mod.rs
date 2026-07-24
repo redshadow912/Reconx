@@ -160,11 +160,7 @@ impl CollectorRegistry {
             .collect()
     }
 
-    pub fn all_collectors(&self) -> Vec<Arc<dyn Collector>> {
-        self.collectors.clone()
-    }
 }
-
 #[derive(Debug)]
 pub struct CollectorResult {
     pub collector_name: String,
